@@ -1,70 +1,27 @@
-# Getting Started with Create React App
+# Genomic Platform (front-end edition)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An earlier, front-end-only version of the DNA analysis platform: a React single-page app with Firebase sign-in where users submit a DNA sequence, run **70 motif and pattern tests** on it, and keep a history of results. Admins can review all users and results and manage roles.
 
-## Available Scripts
+> This repository documents the project (description, design, screenshots). The source code lives in the private repository `genomic-platform-code`. The full version with variant annotation and a machine-learning model is described in `Web-Based-DNA-Sequence-Analysis-and-Disease-Prediction-System-with-Administrative-Dashboard`.
 
-In the project directory, you can run:
+## Screenshot
 
-### `npm start`
+The analysis engine behind the "Analyze" button, run on a 63 bp test sequence (25 of the 70 tests match):
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+![Pattern tests](docs/images/tests.png)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## What it does
+- **Sign up / sign in** with Firebase Authentication; the first screen is an animated "Loading Genomic Platform..." check of the user's role.
+- **Analyse** a pasted sequence or an uploaded FASTA file.
+- **70 pattern tests** in categories such as Promoter (TATA box, CAAT box, GC box), Regulatory (CRE, NF-kB, Sp1), Splicing (donor, acceptor, branch point), Transcript (poly-A, polyadenylation signal), Replication, Codons (start/stop), miRNA seed and secondary-structure motifs. Each result lists the matched text and its position.
+- **Results history** per user, stored in Firestore.
+- **Admin dashboard** listing all users and results, plus an **admin role manager** to promote or demote accounts.
 
-### `npm test`
+## How it works
+1. `App.jsx` listens to Firebase `onAuthStateChanged`, reads the user's role from Firestore and routes to the user or admin dashboard.
+2. `dnaTests.js` defines every test as `{name, category, pattern}`; `runAllTests(sequence)` upper-cases the sequence, runs each regular expression globally and returns `{testName: ["match@index", ...]}`.
+3. The dashboard shows the counts, and saves the sequence and summary to the `results` collection.
+4. `AdminDashboard` queries `results` (newest first) and `users`; `AdminRoleManager` updates a user's `role` field.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Tech stack
+React 18, Tailwind CSS, Framer Motion, Recharts, Firebase Authentication and Firestore.
