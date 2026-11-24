@@ -1,5 +1,7 @@
 # Genomic Platform (front-end edition)
 
+![Last commit](https://img.shields.io/github/last-commit/KArT4206/genomic-platform)
+
 An earlier, front-end-only version of the DNA analysis platform: a React single-page app with Firebase sign-in where users submit a DNA sequence, run **70 motif and pattern tests** on it, and keep a history of results. Admins can review all users and results and manage roles.
 
 > This repository documents the project (description, design, screenshots). The source code lives in the private repository `genomic-platform-code`. The full version with variant annotation and a machine-learning model is described in `Web-Based-DNA-Sequence-Analysis-and-Disease-Prediction-System-with-Administrative-Dashboard`.
